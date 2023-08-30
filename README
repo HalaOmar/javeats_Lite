@@ -59,6 +59,11 @@
     - Admin can perfom all CRUD operations on all the entities in the system like restaurants
       orders details , customers, items , menus and carts .
 
+    - The system will provide information about vendor purchases, inventory levels, menu item sales, labor productivity, and store profitability should be presented on a single dashboard managers and the home office has access to.
+  
+    - Provided reports include: the range of most to least profitable items, your best sellers, performance of labor force productivity, Detail Tasks and Duties .
+    -  When stock levels decrease, place new orders that will go out to wholesale food suppliers for specific products and ingredients.
+
 
     ### Customers 
 

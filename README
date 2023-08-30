@@ -75,7 +75,8 @@
     - customers will pay online by thier debit or credit cards using PAYPAL payment gateway  or off-line.
 
     - Javeats will help the customer to find the nearest restaurant to him by GPS tracking 
-      system.
+      system, find nearby places and display the results as clickable markers.
+      see https://stackoverflow.com/questions/28229673/get-nearest-location-from-a-set-of-predefined-locations-with-google-maps-javascr
 
 
 ## Setup
@@ -94,5 +95,7 @@ to utilize its Services.
 For Paypal Checkout Integration see https://www.section.io/engineering-education/nodejs-paypal-checkout/
 
 For Passprt authentication see https://github.com/jwalton/passport-api-docs
+
+How To Create Google Maps API KEY For Free https://www.youtube.com/watch?v=OGTG1l7yin4
 
  

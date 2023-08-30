@@ -58,7 +58,7 @@ app.use('/api/v1/items/customer' , require('./src/Item/User/item_router'))
 app.use('/api/v1/orders/customer' , require('./src/Order/User/order_router'))
 app.use('/success' , (req , res , next ) =>{ res.send("done")})
 app.use('/cancel' , (req , res , next ) =>{ res.send("canceled")})
-
+app.use('/api/v1/restaurants/customer/googleMap' , require('./src/Services/google_maps'))
 
 
 

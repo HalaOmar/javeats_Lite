@@ -32,6 +32,9 @@ const Orders = sequelize.define('orders' , {
         payment_method :{
             type : Sequelize.DataTypes.STRING
         },
+        status : {
+            type : Sequelize.DataTypes.STRING
+        },
         createdAt : {
             type : Date.now() ,
             allowNull : false

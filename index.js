@@ -10,6 +10,8 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 // const boolParser = require('express-query-boolean');
 const compression = require('compression');
+const cookieParser = require('cookie-parser');
+
 
 
 
@@ -19,6 +21,7 @@ const logger = require('./src/Commons/logger/winstonlogger')
 
 app.use(helmet());
 app.use(compression());
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(require('./src/Session/session_config')())
@@ -56,8 +59,8 @@ app.use('/api/v1/items/dashboard' ,passports.nonCustomerPass.session(), require(
 //Customer API 
 app.use('/api/v1/items/customer' , require('./src/Item/User/item_router'))
 app.use('/api/v1/orders/customer' , require('./src/Order/User/order_router'))
-app.use('/success' , (req , res , next ) =>{ res.send("done")})
-app.use('/cancel' , (req , res , next ) =>{ res.send("canceled")})
+app.use('/success' , (req , res , next ) =>{ console.log(req.body)})
+app.use('/cancel' , (req , res , next ) =>{ console.log(req.body)})
 app.use('/api/v1/restaurants/customer/googleMap' , require('./src/Services/google_maps'))
 
 

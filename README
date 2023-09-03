@@ -97,9 +97,9 @@ For Migration using sequelize-cli see https://sequelize.org/docs/v6/other-topics
 For AWS you must to sign up for Amazone https://aws.amazon.com and login to your dashboard 
 to utilize its Services.
 
-For Paypal Checkout Integration see https://www.section.io/engineering-education/nodejs-paypal-checkout/
+For Paypal Checkout Integration see https://www.section.io/engineering-education/nodejs-paypal-checkout/ , https://developer.paypal.com/api/rest
 
-For Passprt authentication see https://github.com/jwalton/passport-api-docs
+For Passport authentication see https://github.com/jwalton/passport-api-docs
 
 How To Create Google Maps API KEY For Free https://www.youtube.com/watch?v=OGTG1l7yin4
 

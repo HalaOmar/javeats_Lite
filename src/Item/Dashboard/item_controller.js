@@ -6,7 +6,7 @@ exports.addItem = async (req , res )=>{
     try {
         const item = {
             id        : uid.uid(32) || undefined,
-            menue_id  : req.body.menue_id || undefined, 
+            menue_id  : req.body.menue_id || undefined, //same as resturantId
             category_id : parseInt(req.body.category_id)|| undefined ,
             name : req.body.name || undefined,
             description : req.body.description || undefined ,

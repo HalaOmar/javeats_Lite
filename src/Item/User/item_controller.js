@@ -30,11 +30,16 @@ exports.addItemToCart =  ( req , res )=>{
 
     try {
      
-    let { itemId , item_name , item_price} = req.body 
-    let quentity = parseInt(req.body.quentity)
-    let item = {itemId , item_name , item_price , quentity}
+    let {  item_name , item_price} = req.body 
+    let quantity = (req.body.quantity)
+    item_price = (item_price)
 
-    let cartId  = {
+    let item = {"name":item_name ,
+                "price":item_price ,
+                "currency": "EUR" ,
+                 quantity}
+
+    let cartData  = {
         restaurantId : req.body.restaurantId ,
         userId :       req.user ? req.user.id : null || req.sessionID , 
         branchId :     req.body.branchId 
@@ -42,7 +47,7 @@ exports.addItemToCart =  ( req , res )=>{
                     
     let session = req.session
 
-    let Op =  item_services.addItemToCart(session , cartId , item)
+    let Op =  item_services.addItemToCart(session , cartData , item)
     res.status(200).json({Op})
         
     } catch (error) {

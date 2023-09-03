@@ -3,8 +3,14 @@ const order_controller = require('./order_controller')
 const payment = require('../../Services/payment');
 
 router.route('/placeOrder')
-.post(order_controller.placeOrder , payment.payByPAYPAL)
+.post(
+     order_controller.getCartDetails ,
+     order_controller.saveOrderToDatabase ,
+     payment.createPaymentObject ,
+     payment.payByPAYPAL)
+
 router.route('/successPayment')
-.get(order_controller.placeSuccessOrder)
+.get( payment.successPay )
+
 module.exports = router
 

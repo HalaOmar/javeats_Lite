@@ -1,7 +1,8 @@
 
 module.exports = class Cart{
 
-    Items = []
+    owner
+    restaurantsLines
     
     constructor( cartId ){
         this.initialize(cartId)       
@@ -11,8 +12,9 @@ module.exports = class Cart{
         let { restaurantId , userId , branchId } = cartId
         this.restaurantsLines = {}
         this.restaurantsLines[`${restaurantId}`]={}
-        this.restaurantsLines[`${restaurantId}`][`${branchId}`] ={}
-        this.restaurantsLines[`${restaurantId}`][`${branchId}`][`${userId}`] = []
+        this.restaurantsLines[`${restaurantId}`][`${branchId}`] = []
+        this.owner = userId
+        // this.restaurantsLines[`${restaurantId}`][`${branchId}`][`${userId}`] = []
     }
 
     initializeRestaurantLines({ restaurantId , userId , branchId } =cartId ) {
@@ -24,9 +26,17 @@ module.exports = class Cart{
     }
     
     initializeBranch({restaurantId , branchId ,userId} =cartId){
-        this.restaurantsLines[`${restaurantId}`][`${branchId}`] ={}
-        this.restaurantsLines[`${restaurantId}`][`${branchId}`][`${userId}`] = []
+        this.restaurantsLines[`${restaurantId}`][`${branchId}`] = []
+        // this.restaurantsLines[`${restaurantId}`][`${branchId}`][`${userId}`] = []
 
+    }
+
+    getCartOwner(){
+        return this.owner
+    }
+
+    getBranchesHaveOrdersFromCart(restId){
+        return Object.keys(this.restaurantsLines[`${restId}`]) 
     }
 
     addItem(itemId , quentity){
@@ -41,16 +51,14 @@ module.exports = class Cart{
         let Items = []
         let total = 0
         const restaurantLine = this.restaurantsLines[`${restaurantId}`]
-        const restLine = Object.entries(restaurantLine)
-        for (const [ branchId , BranchLine] of restLine) {
-            let itemsOfBranchLine = Object.values(BranchLine)
-            
-            for (const item of itemsOfBranchLine[0]) {
+        const branches = Object.values(restaurantLine)
+        for (const BranchLine of branches) {
+            for (const item of BranchLine) {
                 Items.push(item) 
-                total+=parseInt(item.item_price)  
+                total+=(parseInt(item.price) * parseInt(item.quantity))  
      
             }           
         }
-        return {Items, total}
+        return {"items_line":Items, total}
     }
 }

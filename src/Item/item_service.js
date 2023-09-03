@@ -45,23 +45,21 @@ exports.showItemDetails = ( itemId ) =>{
 exports.getUserCart = () =>{
 
 }
-exports.addItemToCart = ( session ,  cartId ,  item ) =>{
+exports.addItemToCart = ( session ,  cartData ,  item ) =>{
     let restaurantsLines ,cart
-    let { restaurantId , userId , branchId } = cartId
+    let { restaurantId , userId , branchId } = cartData
 
     if(!session.cart){ 
-            cart = new Cart( cartId )
+            cart = new Cart( cartData )
             restaurantsLines = cart.restaurantsLines
-            restaurantsLines[`${restaurantId}`][`${branchId}`][`${userId}`].push(item)
+            restaurantsLines[`${restaurantId}`][`${branchId}`].push(item)
 
             session.cart = cart
     }else {
        let cart =  session['cart'] ;
-           cart = Object.assign(new Cart(cartId) , cart ) ; // as casting
-           console.log(cart instanceof Cart)
-           initializeRestaurantLineParts(cartId , cart)
-
-        cart.restaurantsLines[restaurantId][branchId][userId].push(item)
+           cart = Object.assign(new Cart(cartData) , cart ) ; // as casting
+           initializeRestaurantLineParts( cartData , cart)
+           cart.restaurantsLines[`${restaurantId}`][`${branchId}`].push(item)
         
            }
 
@@ -78,6 +76,5 @@ function initializeRestaurantLineParts({restaurantId , branchId , userId}  , car
     (typeof cart.restaurantsLines[`${restaurantId}`] == 'undefined') ?
     cart.initializeRestaurantLines({ restaurantId , userId , branchId }) :
     (typeof cart.restaurantsLines[`${restaurantId}`][`${branchId}`] == 'undefined') ?
-    cart.initializeBranch({restaurantId , branchId ,userId}) :
-    console.log(cart.restaurantsLines[`${restaurantId}`][`${branchId}`][`${userId}`])
+    cart.initializeBranch({restaurantId , branchId ,userId}) :''
 }

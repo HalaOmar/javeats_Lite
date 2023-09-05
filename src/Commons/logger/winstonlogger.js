@@ -5,6 +5,7 @@ require('winston-mongodb')
 
 const myFormat = format.combine(
   format.printf(info => `${info.level}: ${utils.dateFormat()}: ${info.message}`),
+  format.colorize(),
 )
 
 const mongodb_options = {

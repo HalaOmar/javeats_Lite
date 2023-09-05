@@ -6,7 +6,9 @@ const Exceptions = require('../Commons/Error/Exceptions')
 const _ = require('lodash')
 
 exports.getCartDetails = async ( cart , restId) =>{
-
+   if(!cart) {
+      throw new Exceptions.NotFoundException('CART IS EMPTY')
+   } 
    const userCart = Object.assign( new Cart({restId}) ,cart )
    const cart_owner = userCart.getCartOwner()
    const branches = userCart.getBranchesHaveOrdersFromCart(restId)
@@ -16,9 +18,16 @@ exports.getCartDetails = async ( cart , restId) =>{
 }
 exports.saveOrderToDatabase = async ( branches , cart_owner , restId ) =>{
 console.log(`branches` , branches)
-   let order ,orders_ids = [], orders =[]
+   let order ,
+   orders_ids = [],
+   orders = []
+
+   if(!branches || !cart_owner || !restId){
+      throw new Exceptions.NotFoundException('SYSTEM ERROR')
+   }
+
    for (const branch_id of branches) {
-      order =  order_dao.saveOrderPermenantly({branch_id , cart_owner , restId})
+      order =  order_dao.saveOrderToDatabase({branch_id , cart_owner , restId})
       orders.push(order)
    }
 
@@ -27,14 +36,26 @@ console.log(`branches` , branches)
    for (const order of orders) {   
        orders_ids.push ( order.id)
    }
-
-   return orders_ids
+   
+   return Promise.resolve(orders_ids) 
 
 }
-exports.createPaymentObject = async (  restId ) => {
-  
+exports.createPaymentObject = async ( restId ) => {
+
+   if(!restId){
+      throw new Exceptions.NotFoundException('SYSTEM ERROR')
+   }
    const payPal_Credentials = await order_dao.getRestaurantPaymentData(restId) ;  
    return payment.createPaymentObject(payPal_Credentials)
    
+}
+
+exports.cancelOrder = ( orderIds) =>{
+
+   if(!orderIds){
+      throw new Exceptions.NotFoundException('System Error')
+   }
+
+   return order_dao.cancelOrder(orderIds)
 }
 

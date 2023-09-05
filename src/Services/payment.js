@@ -1,6 +1,7 @@
 
 var paypal = require('paypal-rest-sdk');
 const _ = require('lodash');
+const Exceptions = require('../Commons/Error/Exceptions');
 
    
 paypal.configure({
@@ -45,7 +46,12 @@ exports.createPaymentObject =   ( req , res ,next ) => {
     
 }
 exports.payByPAYPAL = ( req , res )=>{   
-    let { orders } = _.pick(req['payment']['OrdersIds'])
+
+    let orders = req['payment']['OrdersIds'] 
+ 
+        if(!orders){
+            throw new Exceptions.NotFoundException('SYSTEM ERROR')
+        }
 
     paypal.payment.create(req.paymentData["paymentObject"], function (error, payment) {
       if (error) {

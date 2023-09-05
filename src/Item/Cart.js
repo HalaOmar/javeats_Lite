@@ -55,10 +55,11 @@ module.exports = class Cart{
         for (const BranchLine of branches) {
             for (const item of BranchLine) {
                 Items.push(item) 
-                total+=(parseInt(item.price) * parseInt(item.quantity))  
+                total+=(parseFloat(item.price) * parseInt(item.quantity))  
      
             }           
         }
-        return {"items_line":Items, total}
+        return { "items_line":Items,
+                 total}
     }
 }

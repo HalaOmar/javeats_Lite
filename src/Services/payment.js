@@ -1,6 +1,7 @@
 
 var paypal = require('paypal-rest-sdk');
 const _ = require('lodash');
+const {PAYMENT} = require('../Commons/constants')
 const Exceptions = require('../Commons/Error/Exceptions');
 
    
@@ -16,23 +17,23 @@ exports.createPaymentObject =   ( req , res ,next ) => {
                                                         ['items_line','total'])
     
     const payment_json = {
-        "intent": "sale",
+        "intent": PAYMENT.INTENT,
         "payer": {
-            "payment_method": "paypal"
+            "payment_method": PAYMENT.PAYMENT_METHOD
         },
         "redirect_urls": {
-            "cancel_url": `http://localhost:3000/api/v1/orders/customer/failedPayment`,
-            "return_url": `http://localhost:3000/api/v1/orders/customer/successPayment`
+            "cancel_url": PAYMENT.CANCEL_URL,
+            "return_url": PAYMENT.RETURN_URL
         },
         "transactions": [{
             "item_list": {
                 "items": items_line
             },
             "amount": {
-                "currency": "EUR",
+                "currency": PAYMENT.CURRENCY,
                 "total": `${ total}`,
             },
-            "description": "Restaurant" ,
+            "description": PAYMENT.DESCRIPTION ,
             
         }]
         ,

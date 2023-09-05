@@ -7,7 +7,7 @@ module.exports = {
      * Add altering commands here.
      */
      
-      await queryInterface.createTable('order_details' , {
+      await queryInterface.createTable('invoices' , {
         id :{
             type : Sequelize.DataTypes.STRING ,
             primaryKey : true ,
@@ -49,7 +49,7 @@ module.exports = {
      * Add reverting commands here.
      */
    
-     await queryInterface.dropTable('order_details');
+     await queryInterface.dropTable('invoices');
     
   }
 };

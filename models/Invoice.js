@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 
-const OrderDetails = sequelize.define('order_details' , {
+const Invoice = sequelize.define('invoices' , {
     id :{
         type : Sequelize.DataTypes.STRING ,
         primaryKey : true ,
@@ -37,4 +37,4 @@ const OrderDetails = sequelize.define('order_details' , {
     timestamp :true
 });
 
-module.exports = OrderDetails
+module.exports = Invoice

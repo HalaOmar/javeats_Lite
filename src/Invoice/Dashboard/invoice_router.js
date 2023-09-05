@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const orderDetails_controller = require('./orderDetails_controller')
+const invoice_controller = require('./invoice_controller')
 const authentication_controller = require('../../User Management/Authentication/auth_controller')
 
 router.use(authentication_controller.isAdmin)

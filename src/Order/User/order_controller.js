@@ -5,7 +5,6 @@ const logger = require('../../Commons/logger/winstonlogger');
 const res_wrapper = require('../../Commons/http_res_wrapper')
 
 
-
 exports.getCartDetails = async (req , res , next ) =>{
     try {
         const  restId  = req.body.restaurant_id

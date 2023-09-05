@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const order_controller = require('./order_controller')
-const order_details_controller = require('../../OrderDetails/User/order_details_controller');
+const invoice_controller = require('../../Invoice/User/invoice_controller');
 const payment = require('../../Services/payment');
 
 router.route('/placeOrder')
@@ -13,7 +13,7 @@ router.route('/placeOrder')
 
 router.route('/successPayment')
 .get( payment.successPay ,
-      order_details_controller.createInvoice)
+      invoice_controller.createInvoice)
 
 router.route('/failedPayment')
 .get( order_controller.cancelOrder )

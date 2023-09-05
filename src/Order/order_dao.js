@@ -20,14 +20,15 @@ exports.getItemsOfRestaurantLines = ( Cart ,  restaurantId) =>{
     return itemsLineAndTotal
 }
 
-exports.saveOrderPermenantly = ({branch_id , cart_owner , restId} ) =>{
+exports.saveOrderToDatabase = ({branch_id , cart_owner , restId} ) =>{
 
     return Order.create({
         id : uid.uid(32) ,
         restaurant_id : restId ,
         branch_id : branch_id ,
         user_id : cart_owner,
-        payment_method : 'payPal'
+        payment_method : 'payPal',
+        status : 'under processing'
     })
 }
 
@@ -43,4 +44,16 @@ exports.getRestaurantPaymentData = async (restId) =>{
         'payPal_id' : res.payPal_id ,
         'payPal_secret' : res.payPal_secret
     })
+}
+
+exports.cancelOrder = ( orderIds) =>{
+   return Order.destroy({
+        where : {
+            id : orderIds
+        }
+    })
+}
+
+exports.updateOrderStatus = ( orderId) =>{
+    
 }

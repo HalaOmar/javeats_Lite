@@ -36,7 +36,12 @@ module.exports = class Cart{
     }
 
     getBranchesHaveOrdersFromCart(restId){
+        console.log("restId",restId)
         return Object.keys(this.restaurantsLines[`${restId}`]) 
+    }
+
+    getOrdersOfRestBranch(restId , branchId){
+        return this.restaurantsLines[`${restId}`][`${branchId}`]
     }
 
     addItem(itemId , quentity){

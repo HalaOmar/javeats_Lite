@@ -1,15 +1,17 @@
 
 const item_services = require('../item_service')
+const http_res = require('../../Commons/http_res_wrapper');
+const _ = require('lodash');
 
 exports.getItem = async (req , res ) =>{
     try {
 
         const itemId = req.body.itemId || undefined
         let item = await item_services.getItem(itemId)
-        res.status(200).json({item})
+        http_res.success(res ,{item})
         
     } catch (error) {
-        res.json({error})
+        http_res.error(res ,{error})
         
     }
 
@@ -29,30 +31,26 @@ exports.getUserCart = (cartId)=>{
 exports.addItemToCart =  ( req , res )=>{
 
     try {
-     
-    let {  item_name , item_price} = req.body 
-    let quantity = (req.body.quantity)
-    item_price = (item_price)
+    const { session , body , user } = req
+    const { item_id, item_name , item_price ,quantity} = body 
 
-    let item = {"name":item_name ,
-                "price":item_price ,
+    const item = {
+                "item_id":item_id,
+                "name"   :item_name ,
+                "price"  :item_price ,
                 "currency": "EUR" ,
-                 quantity}
+                "quantity" : quantity}
 
-    let cartData  = {
-        restaurantId : req.body.restaurantId ,
-        userId :       req.user ? req.user.id : null || req.sessionID , 
-        branchId :     req.body.branchId 
-                    }
-                    
-    let session = req.session
-
-    let Op =  item_services.addItemToCart(session , cartData , item)
-    res.status(200).json({Op})
+    const cartData  = _.pick(body , ['restaurantId' , 'branchId']) 
+        
+    user ? cartData['userId'] = user.id : cartData['userId'] = req.sessionID  
+         
+    const Op =  item_services.addItemToCart(session , cartData , item)
+    http_res.success(res ,{Op})
         
     } catch (error) {
         console.log(error)
-        res.json({error})
+        http_res.error(res ,{error})
         
     }
 }

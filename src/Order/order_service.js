@@ -3,9 +3,11 @@ const Cart = require('../Item/Cart')
 const payment = require('../Services/payment')
 const utils = require('../../src/Lib/utils')
 const Exceptions = require('../Commons/Error/Exceptions')
+const {uid} = require('uid');
 const _ = require('lodash')
+const Producer = require('../Services/Notification/RabbitMQ/producer')
 
-exports.getCartDetails = async ( cart , restId) =>{
+exports.getCartDetails =  ( cart , restId) =>{
    if(!cart) {
       throw new Exceptions.NotFoundException('CART IS EMPTY')
    } 
@@ -14,30 +16,41 @@ exports.getCartDetails = async ( cart , restId) =>{
    const branches = userCart.getBranchesHaveOrdersFromCart(restId)
    const {items_line , total } =  order_dao.getItemsOfRestaurantLines(userCart , restId)
    
-   return Promise.resolve({items_line ,total , cart_owner , branches}) 
+   return {items_line ,total , cart_owner , branches , userCart}
 }
-exports.saveOrderToDatabase = async ( branches , cart_owner , restId ) =>{
-console.log(`branches` , branches)
+
+exports.createOrder = async ( cartDetails , restId ) =>{
+
    let order ,
    orders_ids = [],
    orders = []
+   console.log(cartDetails)
+   const {cart_owner , branches , userCart  } = cartDetails
 
    if(!branches || !cart_owner || !restId){
+      // console.log(cart_owner , restId)
       throw new Exceptions.NotFoundException('SYSTEM ERROR')
    }
+  
+   for (const branchId of branches) {
+      order = {
+         id : uid(32) ,
+         restaurant_id : restId ,
+         branch_id : branchId ,
+         user_id : cart_owner,
+         payment_method : 'payPal',
+         status : 'under processing'
+     }
 
-   for (const branch_id of branches) {
-      order =  order_dao.saveOrderToDatabase({branch_id , cart_owner , restId})
+     invoice = prepareInvoiceOfEachBranch(userCart , restId , branchId)
+      order = order_dao.createOrder(order , invoice)
       orders.push(order)
    }
 
-   orders = await Promise.all(orders)
-   orders = utils.getData(orders)
-   for (const order of orders) {   
-       orders_ids.push ( order.id)
-   }
-   
-   return Promise.resolve(orders_ids) 
+ 
+   let rs = await  Promise.all(orders)
+   // console.log('resolved_orders' ,rs)
+   return Promise.resolve(rs) 
 
 }
 exports.createPaymentObject = async ( restId ) => {
@@ -59,3 +72,27 @@ exports.cancelOrder = ( orderIds) =>{
    return order_dao.cancelOrder(orderIds)
 }
 
+function prepareInvoiceOfEachBranch( cart , restId , branchId){
+   
+ const branch_items_line = cart.getOrdersOfRestBranch(restId , branchId)
+
+ let invoice = branch_items_line.map(item => ({
+   "id": uid(32),
+   "item_id":item.item_id ,
+   "quantity" : item.quantity })
+   )
+
+   return invoice
+}
+
+exports.sendNotificationMessageToDelivery = async ( orders  ) =>{
+
+   if(!orders){
+      throw new Exceptions.NotFoundException(`order is ${orders} `)
+   }
+   const producer = new Producer()
+   console.log("producer =>",producer)
+   let result = await producer.publishMessage('orders' , orders)
+   return result
+
+}

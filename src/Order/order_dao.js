@@ -2,8 +2,9 @@ const models = require('../../models/index')
 console.log('models :>> ', models.restaurant);
 const Restaurant = models.restaurant
 const Order = models.orders
-const uid = require('uid');
-const utils = require('../../src/Lib/utils')
+const Invoice = models.invoices
+const utils = require('../../src/Lib/utils');
+const Exceptions = require('../Commons/Error/Exceptions');
 
 exports.getRestaurantPaymentData = ( restaurantId ) =>{
 
@@ -20,16 +21,41 @@ exports.getItemsOfRestaurantLines = ( Cart ,  restaurantId) =>{
     return itemsLineAndTotal
 }
 
-exports.saveOrderToDatabase = ({branch_id , cart_owner , restId} ) =>{
+exports.createOrder = async (order , invoice) =>{
+    try {
+        let createdInvoice , createdOrder 
+        let invoices=[]
 
-    return Order.create({
-        id : uid.uid(32) ,
-        restaurant_id : restId ,
-        branch_id : branch_id ,
-        user_id : cart_owner,
-        payment_method : 'payPal',
-        status : 'under processing'
-    })
+        const result = await sequelize.transaction(async (t) => {
+      
+          createdOrder = await Order.create(order, { transaction: t });
+          createdOrder = utils.getData(createdOrder)
+          
+          if(!createdOrder.id){
+            throw new Exceptions.NotFoundException('System Error')
+          }
+          invoice.map( async ({item_id , quantity , id }) => {
+        
+            createdInvoice = Invoice.create({
+                "id" : id,
+                "order_id" : createdOrder.id ,
+                "item_id": item_id ,
+                "quantity" : quantity
+
+              }, { transaction: t });
+
+              invoices.push(createdInvoice)
+          });
+
+          invoices = await Promise.all(invoices)
+          
+        });
+        return Promise.resolve({ createdOrder , invoices}) ;
+       
+      } catch (error) {
+       return Promise.reject(error)
+      
+      }
 }
 
 exports.getRestaurantPaymentData = async (restId) =>{

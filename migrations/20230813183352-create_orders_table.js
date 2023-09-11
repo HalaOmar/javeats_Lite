@@ -8,6 +8,10 @@ module.exports = {
      */
     
       await queryInterface.createTable('orders' , {
+        index :{
+            type : Sequelize.DataTypes.INTEGER,
+            autoIncrement: true
+        },
         id :{
             type : Sequelize.DataTypes.STRING ,
             primaryKey : true ,

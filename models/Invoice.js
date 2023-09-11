@@ -2,26 +2,23 @@ const Sequelize = require('sequelize');
 
 
 const Invoice = sequelize.define('invoices' , {
+    index:{
+        type : Sequelize.DataTypes.INTEGER ,
+        autoIncrement:true
+    },
     id :{
         type : Sequelize.DataTypes.STRING ,
         primaryKey : true ,
         allowNull : false
     } ,
-        user_id :{
-            type : Sequelize.DataTypes.STRING ,
-            allowNull : false
-            },
-
         order_id :{
-
             type : Sequelize.DataTypes.STRING ,
             allowNull : false
-
         },
         item_id :{
             type : Sequelize.DataTypes.STRING          
         },
-        quentity : {
+        quantity : {
             type : Sequelize.DataTypes.INTEGER
         } ,
         createdAt : {

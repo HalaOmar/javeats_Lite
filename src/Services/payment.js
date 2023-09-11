@@ -13,10 +13,92 @@ paypal.configure({
 
 exports.createPaymentObject =   ( req , res ,next ) => {
 
-   let { items_line , total } = _.pick(req['payment']['cartDetails'] ,
-                                                        ['items_line','total'])
+   const cart_details =  req['payment']['cartDetails']
+   let { items_line , total } = _.pick( cart_details, ['items_line','total'])
+
+    const payment_json = getPaymentObject(items_line , total)
+
+    req.paymentData = {
+        "paymentObject":payment_json 
+    }
+
+    next()
     
-    const payment_json = {
+}
+exports.payByPAYPAL = ( req , res )=>{  
+
+    const cart_details =  req['payment']['cartDetails']
+    const { items_line } = _.pick( cart_details, ['items_line']) 
+
+    const orders = req['payment']['OrdersIds'] 
+    const invoice = {
+        "orders" : orders ,
+        "items_line" : items_line
+    }
+ 
+        // if(!orders){
+        //     throw new Exceptions.NotFoundException('SYSTEM ERROR')
+        // }
+
+    paypal.payment.create(req.paymentData["paymentObject"], function (error, payment) {
+      if (error) {
+          throw error;
+      } else {
+          for(let i = 0;i < payment.links.length;i++){
+            if(payment.links[i].rel === 'approval_url'){
+                console.log(payment.links[i].href)
+                res.cookie('restaurant_id', `${req.body.restaurant_id}`, {expire: 360000 + Date.now()}); 
+              res.redirect(payment.links[i].href);
+            }
+          }
+      }
+    });
+}
+
+exports.successPay = ( req , res , next) =>{
+    
+    const payerId = req.query.PayerID ;
+    const paymentId = req.query.paymentId
+    
+
+    const execute_payment_json ={
+        "payer_id" : payerId , 
+        "transactions" :[
+            {
+                "amount": {
+                    "currency": "EUR",
+                    "total": 1.5,
+                },
+            }
+        ]
+    }
+
+    paypal.payment.execute(paymentId , execute_payment_json , (error , payment)=>{
+
+        if(error){
+            console.log(error.response)
+            throw error
+        }else{
+            console.log('payment :>> ', payment.transactions[0].item_list);
+            // res.json({
+            //     payment
+            // })
+            next()
+        }
+
+    })
+}
+
+ function getPaymentObject(items_line , total){
+
+    items_line = items_line.map( item => {
+        let { item_id, ...itemRest } = item
+        return itemRest
+     }) 
+    
+     console.log("ITEMS_LINE \n",items_line)
+
+    return {
         "intent": PAYMENT.INTENT,
         "payer": {
             "payment_method": PAYMENT.PAYMENT_METHOD
@@ -38,79 +120,4 @@ exports.createPaymentObject =   ( req , res ,next ) => {
         }]
         ,
     };
-
-    req.paymentData = {
-        "paymentObject":payment_json 
-    }
-
-    next()
-    
-}
-exports.payByPAYPAL = ( req , res )=>{   
-
-    let orders = req['payment']['OrdersIds'] 
- 
-        if(!orders){
-            throw new Exceptions.NotFoundException('SYSTEM ERROR')
-        }
-
-    paypal.payment.create(req.paymentData["paymentObject"], function (error, payment) {
-      if (error) {
-          throw error;
-      } else {
-          for(let i = 0;i < payment.links.length;i++){
-            if(payment.links[i].rel === 'approval_url'){
-                console.log(payment.links[i].href)
-                res.cookie('ordersIds', `${orders}`, {expire: 360000 + Date.now()}); 
-              res.redirect(payment.links[i].href);
-            }
-          }
-      }
-    });
-}
-
-exports.successPay = ( req , res ) =>{
-    console.log('cookies : ' , req.cookies)
-    const payerId = req.query.PayerID ;
-    const paymentId = req.query.paymentId
-
-    const execute_payment_json ={
-        "payer_id" : payerId , 
-        "transactions" :[
-            {
-                "amount": {
-                    "currency": "EUR",
-                    "total": 1,
-                },
-            }
-        ]
-    }
-
-    paypal.payment.execute(paymentId , execute_payment_json , (error , payment)=>{
-
-        if(error){
-            console.log(error.response)
-            throw error
-        }else{
-            console.log('payment :>> ', payment.transactions[0].item_list);
-            res.json({
-                payment
-            })
-        }
-
-    })
-}
-
-exports.getOrderDetails = ( req , res ) =>{
-
-    
-
-}
-
-function queryString(orders){
-    let queryString 
-    orders.map(order => queryString += ('order=' + order).concat('&'))
-    return queryString
-}
-
-    
+ }

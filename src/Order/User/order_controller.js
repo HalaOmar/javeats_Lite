@@ -5,12 +5,14 @@ const logger = require('../../Commons/logger/winstonlogger');
 const res_wrapper = require('../../Commons/http_res_wrapper')
 
 
-exports.getCartDetails = async (req , res , next ) =>{
+exports.getCartDetails =  (req , res , next ) =>{
     try {
-        const  restId  = req.body.restaurant_id
-        const  cart  = req.session.cart 
-        const cartDetails = await order_services.getCartDetails(cart , restId)
+        const { body , session } = req
+        const  restId  = body.restaurant_id || req.cookies.restaurant_id
+        const  cart  = session.cart 
+        const  cartDetails = order_services.getCartDetails(cart , restId)
         console.log('cartDetails :>> ', cartDetails);
+
         req["payment"] = {
             "cartDetails" : cartDetails
         }
@@ -18,26 +20,29 @@ exports.getCartDetails = async (req , res , next ) =>{
         next()
         
     } catch (error) {
-        res_wrapper.error(error)
+        console.log(error)
+        res_wrapper.error(res , error)
     }
 
 
 }
 
-exports.saveOrderToDatabase = async ( req , res , next) => {
+exports.createOrder = async ( req , res , next) => {
     console.log( "cartDetails" , req.cartDetails)
     try {
-        const {cart_owner , branches} = _.pick(req['payment']['cartDetails'] , ['cart_owner' , 'branches'])
-        const restId = req.body.restaurant_id
-
+        const {cookies , body ,payment} = req
+        const restaurant_id = body.restaurant_id || cookies.restaurant_id
+        const {cartDetails} = payment
+        
         let OrdersIds = await
-                     order_services.saveOrderToDatabase(branches , cart_owner , restId)
-        
-        req['payment']['OrdersIds'] = OrdersIds
-        
+                     order_services.createOrder( cartDetails , restaurant_id)
+
+        // res_wrapper.success( res , {OrdersIds})
+        req["payment"]["OrdersIds"] = OrdersIds
         next()
     } catch (error) {
-        res_wrapper.error(error)
+        console.log(error)
+        res_wrapper.error( res , error)
         
     }
 }
@@ -51,12 +56,18 @@ exports.cancelOrder = async ( req , res) =>{
         op ? res_wrapper.success({message : 'order deleted successfully'}) :
              logger.warn({ message : 'Failed to delete order'})
     } catch (error) {
-        res_wrapper.error(error)
+        res_wrapper.error( res , error)
     }
 
 }
-exports.placeSuccessOrder = ( req , res  ) =>{
+exports.sendNotificationMessageToDelivery = async ( req , res  ) =>{
+    try {
 
-    res.send("confirm order registration")
-
+    const orders = req.payment.OrdersIds
+    const result = await order_services.sendNotificationMessageToDelivery(orders)
+    res_wrapper.success(res , { result})
+        
+    } catch (error) {
+    res_wrapper.error(res , {error})   
+    }
 }

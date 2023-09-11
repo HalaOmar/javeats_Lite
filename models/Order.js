@@ -2,6 +2,10 @@ const Sequelize = require('sequelize');
 
 
 const Orders = sequelize.define('orders' , {
+        index:{
+            type : Sequelize.DataTypes.INTEGER ,
+            autoIncrement:true
+        },
         id :{
             type : Sequelize.DataTypes.STRING ,
             primaryKey : true ,

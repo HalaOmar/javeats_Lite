@@ -6,14 +6,15 @@ const payment = require('../../Services/payment');
 router.route('/placeOrder')
 .post(
      order_controller.getCartDetails ,
-     order_controller.saveOrderToDatabase ,
      payment.createPaymentObject ,
      payment.payByPAYPAL,
      )
 
 router.route('/successPayment')
-.get( payment.successPay ,
-      invoice_controller.createInvoice)
+.get( /*payment.successPay ,*/ 
+     order_controller.getCartDetails,
+      order_controller.createOrder , 
+      order_controller.sendNotificationMessageToDelivery) 
 
 router.route('/failedPayment')
 .get( order_controller.cancelOrder )

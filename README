@@ -50,8 +50,9 @@
                    for write unit tests and ensure the correctness of the implemented 
                    functionalities.
                 
-    - Amazon Web Services-S3 buckets    : Buckets are containers for data stored in S3, we used it for storing
-                    images on amazone data center.
+    - Amazon Web Services-S3 buckets    : Buckets are containers for data stored in S3, we used it for storing images on Amazone data center.
+
+    - RabbitMQ Server : RabbitMQ is an open-source message broker and intelligent message bus that receives messages from producers and routes them to one or more consumers. It’s a flexible messaging platform that has been designed from the ground up to interoperate with other messaging systems. It supports several messaging protocols such as AMQP, SMTP, STOMP, and HTTP for lightweight web messaging .
 
 ## Features
     ### Dashboard Users

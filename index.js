@@ -11,13 +11,14 @@ const bodyParser = require('body-parser');
 // const boolParser = require('express-query-boolean');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
-
-
-
-
 const app = express()
-const logger = require('./src/Commons/logger/winstonlogger')
+const server = require('http').createServer(app);
+const io = require('./Socket.io/io_setup').setServer(server)
+global.io = io
 
+
+
+const logger = require('./src/Commons/logger/winstonlogger');
 
 app.use(helmet());
 app.use(compression());
@@ -52,13 +53,19 @@ app.use('/api/v1/dashboard/non-customer' , require('./src/User Management/DashBo
 // app.use('/api/v1/dashboard/group-rules' , require('./src/User Management/DashBoard/group-rules/router'))
 // app.use('/api/v1/dashboard/group-users' , require('./src/User Management/DashBoard/group-users/router'))
 
-app.use('/api/v1/restaurants/dashboard' ,passports.nonCustomerPass.session(), require('./src/Restaurant/Dashboard/router'))
-app.use('/api/v1/branches/dashboard' ,passports.nonCustomerPass.session(), require('./src/Branch/Dashboard/branch_router'))
-app.use('/api/v1/items/dashboard' ,passports.nonCustomerPass.session(), require('./src/Item/Dashboard/item_router'))
+app.use('/api/v1/restaurants/dashboard' ,passports.nonCustomerPass.session(), 
+    require('./src/Restaurant/Dashboard/router'))
+app.use('/api/v1/branches/dashboard' ,passports.nonCustomerPass.session(), 
+    require('./src/Branch/Dashboard/branch_router'))
+app.use('/api/v1/items/dashboard' ,passports.nonCustomerPass.session(), 
+    require('./src/Item/Dashboard/item_router'))
+app.use('/api/v1/orders/dashboard' , passports.nonCustomerPass.session(),
+    require('./src/Order/Dashboard/order_router'))
 
 //Customer API 
 app.use('/api/v1/items/customer' , require('./src/Item/User/item_router'))
 app.use('/api/v1/orders/customer' , require('./src/Order/User/order_router'))
+
 app.use('/success' , (req , res , next ) =>{ console.log(req.body)})
 app.use('/cancel' , (req , res , next ) =>{ console.log(req.body)})
 app.use('/api/v1/restaurants/customer/googleMap' , require('./src/Services/google_maps'))
@@ -77,6 +84,6 @@ app.use(function (req, res, next) {
   });
 
 
-app.listen('3000' , ()=>{
+server.listen('3000' , ()=>{
     console.log('server running on port :>> ', process.env.PORT);
 })

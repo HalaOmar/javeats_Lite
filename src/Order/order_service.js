@@ -6,6 +6,9 @@ const Exceptions = require('../Commons/Error/Exceptions')
 const {uid} = require('uid');
 const _ = require('lodash')
 const Producer = require('../Services/Notification/RabbitMQ/producer')
+const Consumer = require('../Services/Notification/RabbitMQ/consumer')
+const { notifyDelivery }= require('../../Socket.io/delivery_ioSocket')
+
 
 exports.getCartDetails =  ( cart , restId) =>{
    if(!cart) {
@@ -85,7 +88,7 @@ function prepareInvoiceOfEachBranch( cart , restId , branchId){
    return invoice
 }
 
-exports.sendNotificationMessageToDelivery = async ( orders  ) =>{
+exports.pushNotificationMessageToDelivery = async ( orders  ) =>{
 
    if(!orders){
       throw new Exceptions.NotFoundException(`order is ${orders} `)
@@ -94,5 +97,23 @@ exports.sendNotificationMessageToDelivery = async ( orders  ) =>{
    console.log("producer =>",producer)
    let result = await producer.publishMessage('orders' , orders)
    return result
+
+}
+
+exports.sendNotificationMessageToDelivery = async ( orders  ) =>{
+
+   if(!orders){
+      throw new Exceptions.NotFoundException(`order is ${orders} `)
+   }
+   notifyDelivery(orders)  
+
+}
+
+
+exports.getDeliveryOrders = async ( ) => {
+  
+   const consumer = new Consumer()
+   const msg = await consumer.consumeMessage( 'orders' , 'orders')
+   return msg
 
 }

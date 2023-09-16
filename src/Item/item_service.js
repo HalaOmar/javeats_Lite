@@ -1,6 +1,7 @@
 const Error = require('../Commons/Error/Exceptions')
 const item_dao = require('./item_dao')
 const Cart = require('./Cart')
+const Exceptions = require('../Commons/Error/Exceptions')
 
 
 exports.addItem = ( Item )=>{
@@ -44,7 +45,10 @@ exports.getUserCart = () =>{
 }
 exports.addItemToCart = ( session ,  cartData ,  item ) =>{
     let restaurantsLines ,cart
-    let { restaurantId , userId , branchId } = cartData
+    let { restaurantId ,  branchId } = cartData
+    if(!restaurantId || !branchId){
+        throw new Exceptions.NotFoundException('System Error')
+    }
 
     if(!session.cart){ 
             cart = new Cart( cartData )

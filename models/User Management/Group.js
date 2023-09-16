@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 
-
 const Group = sequelize.define('groups' , {
     id :{
         type : Sequelize.INTEGER , 
@@ -12,7 +11,8 @@ const Group = sequelize.define('groups' , {
         unique : true
     },
     active : {
-        type : Sequelize.BOOLEAN 
+        type : Sequelize.BOOLEAN ,
+        default : true
     },
     code : {
         type : Sequelize.INTEGER ,

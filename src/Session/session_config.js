@@ -1,5 +1,6 @@
-const session = require('express-session');
-const MySQLStore = require('express-mysql-session')(session);
+const express_session = require('express-session');
+const { col } = require('sequelize');
+const MySQLStore = require('express-mysql-session')(express_session);
 const env = process.env.NODE_ENV || 'development';
 const config = require('../../config/config.json')[env];
 
@@ -30,8 +31,9 @@ sessionStore.onReady().then(() => {
 	console.error(error);
 });
 
-module.exports = () =>{
-    return session({
+module.exports = () => {
+	
+    return express_session({
         
             key: process.env.SESSION_KEY,
             secret: process.env.SESSION_SECRET,

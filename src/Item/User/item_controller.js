@@ -41,11 +41,11 @@ exports.addItemToCart =  ( req , res )=>{
                 "currency": "EUR" ,
                 "quantity" : quantity}
 
-    const cartData  = _.pick(body , ['restaurantId' , 'branchId']) 
-        
-    user ? cartData['userId'] = user.id : cartData['userId'] = req.sessionID  
-         
+    const cartData  = _.pick(body , ['restaurantId' , 'branchId'])
+    user ? cartData['userId'] = user.id : cartData['userId'] = req.sessionID     
     const Op =  item_services.addItemToCart(session , cartData , item)
+
+    res.cookie('restaurant_id',cartData['restaurantId']) 
     http_res.success(res ,{Op})
         
     } catch (error) {

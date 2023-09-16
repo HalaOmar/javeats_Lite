@@ -8,19 +8,25 @@ class Consumer{
     async consumeMessage(routingKey , queueName){
 
         if(!this.channel){
-            channel = new Connection()
+            let connection = new Connection()
+            await connection.createConnection()
+            this.channel = connection.channel
+
         }
         const exchangeName = config.rabbitMQ.exchangeName
         await this.channel.assertExchange(exchangeName , 'direct')
         const queue = this.channel.assertQueue(queueName)
         await this.channel.bindQueue(queueName, exchangeName , routingKey )
 
-        this.channel.consume(queueName , msg =>{
+        let data = this.channel.consume(queueName , msg =>{
             let data =JSON.parse(msg.content)
             this.channel.ack(msg)
             console.log('data :>> ', data);
+            return Promise.resolve(data)
             
         })
+
+        return data
 
     }
 }

@@ -2,7 +2,7 @@ const amqp = require('amqplib');
 const  config = require('./config');
 
 class Connection{
-    
+
     channel 
    
     async createChannel(){

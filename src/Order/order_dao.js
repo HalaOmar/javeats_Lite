@@ -1,5 +1,4 @@
 const models = require('../../models/index')
-console.log('models :>> ', models.restaurant);
 const Restaurant = models.restaurant
 const Order = models.orders
 const Invoice = models.invoices

@@ -59,3 +59,24 @@ exports.isSupervisor = ( req , res , next ) =>{
         
     }
 }
+
+exports.isDelivery = ( req , res , next ) =>{
+    
+    try {
+        console.log("user" ,req.user)
+        if(!req.user){
+            throw new Error('UnAuthorized Access')
+        }
+        
+        if(req.user.group_code == 2){
+            console.log(`welcome to ${req.user.username}`)
+            next()
+        }else{
+            res.send('Access Denied')
+        }
+        
+    } catch (error) {
+        console.error(error)
+        
+    }
+}

@@ -60,14 +60,27 @@ exports.cancelOrder = async ( req , res) =>{
     }
 
 }
-exports.sendNotificationMessageToDelivery = async ( req , res  ) =>{
+exports.pushNotificationMessageToDelivery = async ( req , res ,next ) =>{
     try {
 
     const orders = req.payment.OrdersIds
-    const result = await order_services.sendNotificationMessageToDelivery(orders)
-    res_wrapper.success(res , { result})
-        
+    const result = await order_services.pushNotificationMessageToDelivery(orders)
+    // res_wrapper.success(res , { result})
+        next()
     } catch (error) {
     res_wrapper.error(res , {error})   
     }
+}
+
+exports.sendNotificationMessageToDelivery =  ( req , res) =>{
+
+    try {
+        const orders = req.payment.OrdersIds
+        order_services.sendNotificationMessageToDelivery(orders)
+        res_wrapper.success(res , {msg : "delivery is notified"})
+        
+    } catch (error) {
+        res_wrapper.error(res , { error})
+    }
+
 }

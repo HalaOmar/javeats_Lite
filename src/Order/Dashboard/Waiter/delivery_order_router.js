@@ -1,7 +1,7 @@
 const express = require('express');
 const delivery_router = express.Router()
 const order_controller = require('./order_controller')
-const authentication_controller = require('../../User Management/Authentication/auth_controller');
+const authentication_controller = require('../../../User Management/Authentication/auth_controller');
 
 
 delivery_router.route('/')

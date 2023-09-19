@@ -4,6 +4,7 @@ const Order = models.orders
 const Invoice = models.invoices
 const utils = require('../../src/Lib/utils');
 const Exceptions = require('../Commons/Error/Exceptions');
+const OrderHistory = models.order_histories;
 
 exports.getRestaurantPaymentData = ( restaurantId ) =>{
 
@@ -20,9 +21,9 @@ exports.getItemsOfRestaurantLines = ( Cart ,  restaurantId) =>{
     return itemsLineAndTotal
 }
 
-exports.createOrder = async (order , invoice) =>{
+exports.createOrder = async (order , invoice ,order_history) =>{
     try {
-        let createdInvoice , createdOrder 
+        let createdInvoice , createdOrder ,orderHistory
         let invoices=[]
 
         const result = await sequelize.transaction(async (t) => {
@@ -33,23 +34,23 @@ exports.createOrder = async (order , invoice) =>{
           if(!createdOrder.id){
             throw new Exceptions.NotFoundException('System Error')
           }
-          invoice.map( async ({item_id , quantity , id }) => {
-        
-            createdInvoice = Invoice.create({
-                "id" : id,
-                "order_id" : createdOrder.id ,
-                "item_id": item_id ,
-                "quantity" : quantity
+            invoice.map(async (invoice_line) => {
+              
+            invoice_line.order_id = createdOrder.id
+            createdInvoice = Invoice.create(invoice_line, { transaction: t });
 
-              }, { transaction: t });
-
-              invoices.push(createdInvoice)
+            invoices.push(createdInvoice)
           });
 
-          invoices = await Promise.all(invoices)
+            invoices = await Promise.all(invoices) 
+            
+            order_history.order_id = createdOrder.id
+            const orderHistory = await OrderHistory.create(order_history)   
+          
           
         });
-        return Promise.resolve({ createdOrder , invoices}) ;
+
+        return Promise.resolve({ createdOrder , invoices , orderHistory}) ;
        
       } catch (error) {
        return Promise.reject(error)

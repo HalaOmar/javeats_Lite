@@ -8,6 +8,7 @@ const _ = require('lodash')
 const Producer = require('../Services/Notification/RabbitMQ/producer')
 const Consumer = require('../Services/Notification/RabbitMQ/consumer')
 const { notifyDelivery }= require('../../Socket.io/delivery_ioSocket')
+const { notifyWaiter } = require('../../Socket.io/waiter_ioSocket')
 
 
 exports.getCartDetails =  ( cart , restId) =>{
@@ -25,7 +26,6 @@ exports.getCartDetails =  ( cart , restId) =>{
 exports.createOrder = async ( cartDetails , restId ) =>{
 
    let order ,
-   orders_ids = [],
    orders = []
    console.log(cartDetails)
    const {cart_owner , branches , userCart  } = cartDetails
@@ -45,8 +45,13 @@ exports.createOrder = async ( cartDetails , restId ) =>{
          status : 'under processing'
      }
 
-     invoice = prepareInvoiceOfEachBranch(userCart , restId , branchId)
-      order = order_dao.createOrder(order , invoice)
+      invoice = prepareInvoiceOfEachBranch(userCart, restId, branchId)
+      let order_history = {
+         id: uid(32),
+         status: 'waiting',
+         updatedBy:'customer'
+      }
+      order = order_dao.createOrder(order , invoice , order_history)
       orders.push(order)
    }
 
@@ -88,32 +93,32 @@ function prepareInvoiceOfEachBranch( cart , restId , branchId){
    return invoice
 }
 
-exports.pushNotificationMessageToDelivery = async ( orders  ) =>{
+exports.pushNotificationMessageToWaiter = async ( orders  ) =>{
 
    if(!orders){
       throw new Exceptions.NotFoundException(`order is ${orders} `)
    }
    const producer = new Producer()
    console.log("producer =>",producer)
-   let result = await producer.publishMessage('orders' , orders)
+   let result = await producer.publishMessage('waiting' , orders)
    return result
 
 }
 
-exports.sendNotificationMessageToDelivery = async ( orders  ) =>{
+exports.sendNotificationMessageToWaiter = async ( orders  ) =>{
 
    if(!orders){
       throw new Exceptions.NotFoundException(`order is ${orders} `)
    }
-   notifyDelivery(orders)  
+   notifyWaiter(orders)  
 
 }
 
 
-exports.getDeliveryOrders = async ( ) => {
+exports.getWaitingOrders = async ( ) => {
   
    const consumer = new Consumer()
-   const msg = await consumer.consumeMessage( 'orders' , 'orders')
+   const msg = await consumer.consumeMessage( 'waiting' , 'waiting_orders')
    return msg
 
 }

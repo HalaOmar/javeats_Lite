@@ -10,7 +10,7 @@ exports.setServer = (server) => {
   
   const io = iosocket(server)
   
-  io.of('/api/v1/orders/dashboard')
+  io.of('/api/v1/orders/dashboard/waiter')
     .use(cookieParserMiddelware)
     .use(expressSessionMiddelware)
     .use(initializePassportMiddelware)
@@ -26,6 +26,10 @@ exports.setServer = (server) => {
         socket.on("message", msg => {
           console.log('msg :>> ', msg);
         })
+      }
+      else {
+        io.isAuthenticated = false
+        console.log(`io.isAuthenticated ${io.isAuthenticated}`)
       }
    })
  return io

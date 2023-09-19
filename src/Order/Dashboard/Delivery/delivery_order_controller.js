@@ -1,5 +1,5 @@
-const order_services = require('../order_service')
-const res_wrapper = require('../../Commons/http_res_wrapper');
+const order_services = require('../../order_service')
+const res_wrapper = require('../../../Commons/http_res_wrapper');
 
 
 exports.getDeliveryOrders = async ( req , res  ) =>{

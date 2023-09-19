@@ -23,4 +23,10 @@ const Category = sequelize.define('categories' , {
   
 });
 
+ Category.associate = function (models) {
+    // Category.belongsTo(models.celebrities, {foreignKey: 'celebrityId'});
+    // Category.hasMany(models.competitions , { foreignKey :'competitionId'})
+    
+};
+  
 module.exports = Category

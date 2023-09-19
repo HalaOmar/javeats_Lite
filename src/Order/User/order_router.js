@@ -14,8 +14,8 @@ router.route('/successPayment')
 .get( /*payment.successPay ,*/ 
      order_controller.getCartDetails,
       order_controller.createOrder , 
-      order_controller.pushNotificationMessageToDelivery ,
-      order_controller.sendNotificationMessageToDelivery) 
+      order_controller.pushNotificationMessageToWaiter ,
+      order_controller.sendNotificationMessageToWaiter) 
 
 router.route('/failedPayment')
 .get( order_controller.cancelOrder )

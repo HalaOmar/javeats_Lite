@@ -18,8 +18,7 @@
                    web server, it provides a built-in routing functions and a pre-configured functions for 
                    handling request-response cycle .
 
-    -Nodejs      : It is a software platform used for creating and developing web applications and desktop 
-                   applications as well, it provide developer with a set of pre-configured modules for creating 
+    -Nodejs      : It is a software platform used for creating and developing web applications and desktop applications as well, it provide developer with a set of pre-configured modules for creating 
                    stand alone web server .
 
     - npm        :  It is a build automation tool used for managing dependencies, compiling 
@@ -31,8 +30,7 @@
     - Sequelize  : It is used for Object-Relational Mapping(ORM), it maps javascript objects
                    to tables in the database.
 
-    - Sequelize Command-Line Interface (CLI): The CLI ships support for migrations and project 
-                   bootstrapping 
+    - Sequelize Command-Line Interface (CLI): The CLI ships support for migrations and project bootstrapping 
 
 
 
@@ -57,7 +55,8 @@
     - WebDataRocks : WebDataRocks is a free web reporting tool for data analysis and visualization.It is written in JavaScript and is not constrained by any external framework, WebDataRocks easily displays your CSV or JSON data in an interactive pivot table, offers a number of data analysis features, and provides a reporting experience.
 
 ## Features
-    ### Dashboard Users
+
+### Dashboard Users
 
     - Admin can perfom all CRUD operations on all the entities in the system like restaurants
       orders details , customers, items , menus and carts .
@@ -68,7 +67,7 @@
     -  When stock levels decrease, place new orders that will go out to wholesale food suppliers for specific products and ingredients.
 
 
-    ### Customers 
+### Customers 
 
     - customers can easily explore different restaurants, view their menus, details including GPS
       and add items to their cart for a streamlined ordering process. 

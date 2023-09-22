@@ -26,15 +26,18 @@ module.exports = {
         quentity : {
             type : Sequelize.DataTypes.INTEGER ,
             allowNull : false
+        },
+        price : {
+            type : Sequelize.DataTypes.DOUBLE
         } ,
         createdAt : {
           type : Sequelize.DATE ,
           allowNull : false
-      },
-      updatedAt :{
-          type : Sequelize.DATE , 
-          allowNull : false
-      }
+        },
+        updatedAt :{
+            type : Sequelize.DATE , 
+            allowNull : false
+        }
     } ,
     {
         timestamp :true ,

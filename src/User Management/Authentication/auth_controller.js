@@ -80,3 +80,25 @@ exports.isDelivery = ( req , res , next ) =>{
         
     }
 }
+
+exports.isWaiter = ( req , res , next ) =>{
+    
+    try {
+        console.log("Waiter" ,req.user)
+        if(!req.user){
+            throw new Error('UnAuthorized Access')
+        }
+        
+        if(req.user.group_code == 5){
+            console.log(`welcome to ${req.user.username}`)
+            next()
+        } else {
+            console.log(`req.user.group_code ${req.user.group_code}`)
+            res.send('Access Denied')
+        }
+        
+    } catch (error) {
+        console.error(error)
+        
+    }
+}

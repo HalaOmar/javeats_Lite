@@ -1,7 +1,9 @@
 const Error = require('../Commons/Error/Exceptions')
 const item_dao = require('./item_dao')
 const Cart = require('./Cart')
+const utils = require('../Lib/utils')
 const Exceptions = require('../Commons/Error/Exceptions')
+
 
 
 exports.addItem = ( Item )=>{
@@ -16,8 +18,15 @@ exports.addItem = ( Item )=>{
     return item_dao.addItem(Item)
 }
 
-exports.getItem = (req , res )=>{
+exports.getItemById = async ( item_id )=>{
 
+    if (!item_id) {
+        throw new Exceptions.InvalidInputException("System Error")
+    }
+
+    const result = await item_dao.getItemById(item_id)
+    const item = utils.getData(result)
+    return Promise.resolve(item)
 }
 
 exports.updateItem = (req , res )=>{

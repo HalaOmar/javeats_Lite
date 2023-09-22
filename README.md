@@ -35,11 +35,11 @@
                    bootstrapping 
 
 
+
     - Passport   : It is a powerful framework for authenticating and authorizing http requests
                    and provides other security features for express applications.
 
-    - MySQL      : It is used as database Management System for storing structured data and
-                   complex relationships.
+    - MySQL      : It is used as database Management System for storing structured   data and complex relationships.
 
     - MongoDB    : It is non-relational Database Management system used for storing non-structured 
                    data, we will use it to store logs only.
@@ -53,6 +53,8 @@
     - Amazon Web Services-S3 buckets    : Buckets are containers for data stored in S3, we used it for storing images on Amazone data center.
 
     - RabbitMQ Server : RabbitMQ is an open-source message broker and intelligent message bus that receives messages from producers and routes them to one or more consumers. It’s a flexible messaging platform that has been designed from the ground up to interoperate with other messaging systems. It supports several messaging protocols such as AMQP, SMTP, STOMP, and HTTP for lightweight web messaging .
+  
+    - WebDataRocks : WebDataRocks is a free web reporting tool for data analysis and visualization.It is written in JavaScript and is not constrained by any external framework, WebDataRocks easily displays your CSV or JSON data in an interactive pivot table, offers a number of data analysis features, and provides a reporting experience.
 
 ## Features
     ### Dashboard Users

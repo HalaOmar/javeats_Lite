@@ -32,19 +32,39 @@ exports.createOrder = async ( req , res , next) => {
     try {
         const {cookies , body ,payment} = req
         const restaurant_id = body.restaurant_id || cookies.restaurant_id
-        const {cartDetails} = payment
+        const { cartDetails } = payment
+        const delivery_method = req.cookies.delivery_method
         
         let OrdersIds = await
-                     order_services.createOrder( cartDetails , restaurant_id)
+        order_services.createOrder( cartDetails , restaurant_id , delivery_method)
 
         // res_wrapper.success( res , {OrdersIds})
         req["payment"]["OrdersIds"] = OrdersIds
+        
         next()
     } catch (error) {
         console.log(error)
         res_wrapper.error( res , error)
         
     }
+}
+
+exports.setDeliveryMethod = (req, res, next) => {
+    try {
+        const { body } = req
+        const delivery_method = body.delivery_method
+        const cookieName = 'delivery_method'
+        const cookieValue = delivery_method
+        const cookieOption = {
+            maxAge: 180000 ,
+            httpOnly: true,
+            path :'/api/v1/orders/customer/successPayment'
+        }
+    res.cookie(cookieName , cookieValue , cookieOption)
+    next()   
+    } catch (error) {
+        
+    } 
 }
 
 exports.cancelOrder = async ( req , res) =>{

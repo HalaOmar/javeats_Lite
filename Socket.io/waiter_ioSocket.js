@@ -11,14 +11,14 @@ waiterNameSpace.on("connection", async ( socket ) => {
   const msg = await consumer.consumeMessage("waiting", "waiting_orders")
     socket.emit("queued orders", { msg } )
     
-    socket.on("order underprocessing", async (order) => {
-        const result = await order_history_services.addNextStepToOrderHistory(order.order_id , 'under processing')
-        if (result) {
-            deliveryNameSpace.emit("new order under processing" , order)
-            socket.emit("confirm under processing order", { orderId: order.id })
-          
-        }
-    })
+socket.on("order underprocessing", async (order) => {
+    const result = await order_history_services.addNextStepToOrderHistory(order.order_id , 'under processing')
+    if (result) {
+        deliveryNameSpace.emit("new order under processing" , order)
+        socket.emit("confirm under processing order", { orderId: order.id })
+        
+    }
+})
 })
 exports.notifyWaiter = ( order ) =>{
   waiterNameSpace.emit('new order' , order)

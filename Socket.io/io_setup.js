@@ -4,7 +4,7 @@ const {
   expressSessionMiddelware,
   initializePassportMiddelware,
   authenticateBySession
-      } = require('./IO_Middelwares');
+      } = require('./io_Middelwares');
 
 exports.setServer = (server) => {
   

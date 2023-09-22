@@ -21,20 +21,28 @@ exports.addItem = async (req , res )=>{
     res.json(error)        
     }
 
-    
-
-
-
 }
 
-exports.getItem = (req , res )=>{
-
+exports.getItemById = (req , res )=>{
+    try {
+        const item_id = req.body.item_id
+    } catch (error) {
+        
+    }
 }
 
 exports.updateItem = (req , res )=>{
-
+    try {
+        
+    } catch (error) {
+        
+    }
 }
 
 exports.deleteItem = (req , res )=>{
-
+    try {
+        
+    } catch (error) {
+        
+    }
 }

@@ -34,6 +34,9 @@ const Customer = sequelize.define('customers' , {
         type : STRING
     }
     ,
+    email: {
+        type: STRING
+    },
     GPS :{
         type : STRING
     },

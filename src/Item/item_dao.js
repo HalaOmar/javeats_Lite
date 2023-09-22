@@ -8,7 +8,7 @@ exports.addItem = ( item )=>{
 
 }
 
-exports.getItem = (req , res )=>{
+exports.getItemById = (req , res )=>{
 
 }
 

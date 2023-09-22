@@ -80,6 +80,33 @@ exports.cancelOrder = ( orderIds) =>{
     })
 }
 
-exports.updateOrderStatus = ( orderId) =>{
-    
+exports.updateOrderStatus = ( orderId , new_status) =>{
+    return Order.update({
+        'status': new_status
+    }, {
+        where: {
+        id: orderId     
+        }
+    })
+}
+
+exports.getAllOrdersByStatus = (status) => {
+   return Order.findAll({
+       where: {
+           status
+       } 
+    })
+}
+
+exports.getAllOrdersBy = (selection_criteria) => {
+    return Order.findAll({
+        where:  selection_criteria
+       
+   })
+}
+
+exports.deliverOrder = (newly_data , update_criteria) => {
+    return Order.update(newly_data, {
+        where: update_criteria
+    })
 }

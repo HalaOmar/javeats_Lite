@@ -23,7 +23,7 @@ exports.getCartDetails =  ( cart , restId) =>{
    return {items_line ,total , cart_owner , branches , userCart}
 }
 
-exports.createOrder = async ( cartDetails , restId ) =>{
+exports.createOrder = async ( cartDetails , restId ,delivery_method) =>{
 
    let order ,
    orders = []
@@ -42,7 +42,8 @@ exports.createOrder = async ( cartDetails , restId ) =>{
          branch_id : branchId ,
          user_id : cart_owner,
          payment_method : 'payPal',
-         status : 'under processing'
+         status: 'waiting',
+         delivery_boy_id : delivery_method 
      }
 
       invoice = prepareInvoiceOfEachBranch(userCart, restId, branchId)
@@ -87,7 +88,8 @@ function prepareInvoiceOfEachBranch( cart , restId , branchId){
  let invoice = branch_items_line.map(item => ({
    "id": uid(32),
    "item_id":item.item_id ,
-   "quantity" : item.quantity })
+   "quantity": item.quantity,
+   "price":item.price })
    )
 
    return invoice
@@ -121,4 +123,27 @@ exports.getWaitingOrders = async ( ) => {
    const msg = await consumer.consumeMessage( 'waiting' , 'waiting_orders')
    return msg
 
+}
+
+exports.getAllOrdersByStatus = async (status) => {
+   const result = await order_dao.getAllOrdersByStatus(status)
+   const waitingOrders = utils.getData(result)
+   return Promise.resolve(waitingOrders)
+}
+
+exports.getAllOrdersBy = (selection_criteria) => {
+   return order_dao.getAllOrdersBy(selection_criteria)
+}
+
+exports.deliverOrder = async (delivery_id, order_id) => {
+   const newlyData = { 'delivery_boy_id': delivery_id }
+   const updateCriteria = { 'id': order_id }
+   
+   const result = await order_dao.deliverOrder(newlyData, updateCriteria)
+   if (!result) {
+      throw new Exceptions.NotFoundException('Something Error try again')
+   }
+
+   return Promise.resolve(result)
+   
 }

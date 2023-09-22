@@ -24,9 +24,12 @@ const Orders = sequelize.define('orders' , {
         },
         branch_id :{
             type : Sequelize.DataTypes.STRING ,
-            allowNull : false
-
-        } ,
+            allowNull: false
+        },
+        delivery_boy_id: {
+            type : Sequelize.DataTypes.STRING ,
+            allowNull: false
+        },
         delivery_address :{
             type : Sequelize.DataTypes.STRING          
         },

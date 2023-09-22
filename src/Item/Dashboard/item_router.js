@@ -7,7 +7,7 @@ router.use(auth_controller.isSupervisor)
 
 router.route('/')
 .post(file_uploader , item_controller.addItem)
-.get(item_controller.getItem)
+.get(item_controller.getItemById)
 .put(item_controller.updateItem)
 .delete(item_controller.deleteItem)
 

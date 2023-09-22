@@ -30,8 +30,13 @@ const Non_customerUser = sequelize.define('non_customerUsers' , {
     },
     lastName :{
         type : STRING
-    }
-    ,
+    },
+    email: {
+        type : STRING
+    },
+    restaurant_id: {
+        type : STRING
+    } ,
     city :{
         type : STRING
     },

@@ -4,6 +4,6 @@ const authentication_controller = require('../../User Management/Authentication/
 
 router.use(authentication_controller.isAdmin)
 router.route('/sales')
-.get(orderDetails_controller.getSalesOnThisDate)
+.get(invoice_controller.getSalesOnThisDate)
 
 module.exports = router

@@ -23,10 +23,12 @@ module.exports = {
             },
 
         restaurant_id :{
-
             type : Sequelize.DataTypes.STRING ,
             allowNull : false
-
+          },
+        delivery_boy_id: {
+            type : Sequelize.DataTypes.STRING ,
+            allowNull: false
         },
         delivery_address :{
             type : Sequelize.DataTypes.STRING          

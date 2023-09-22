@@ -10,4 +10,6 @@ module.exports = (app) => {
     require('../src/Item/Dashboard/item_router'))
     app.use('/api/v1/orders/dashboard/' , passports.nonCustomerPass.session(),
     require('../src/Order/Dashboard/Admin/admin_order_router'))
+    app.use('/api/v1/invoices/dashboard/' , passports.nonCustomerPass.session(),
+    require('../src/Invoice/Dashboard/invoice_router'))
 }

@@ -17,6 +17,6 @@ exports.createInvoice = ( invoice )=>{
     return invoice_dao.createInvoice(invoice)
 
 }
-exports.sales = ( ) =>{
-    orderDetails_dao.getSalesOnThisDate()
+exports.getSalesOnThisDate = ( from , to  ) =>{
+   return invoice_dao.getSalesFromTo(from , to )
 }

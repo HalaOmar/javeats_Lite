@@ -20,6 +20,9 @@ const Invoice = sequelize.define('invoices' , {
         },
         quantity : {
             type : Sequelize.DataTypes.INTEGER
+        },
+        price : {
+            type : Sequelize.DataTypes.DOUBLE
         } ,
         createdAt : {
             type : Date.now() ,
